@@ -51,7 +51,7 @@ table {
 .container {
     width: 450px;
     height: 450px;
-    top: 50%;
+    top: 50%;                                                                                   
     left: 50%;  
     margin: -225px 0 0 -225px;
     border-radius: 5px;
@@ -70,6 +70,10 @@ table {
 
 .display_input {
     width: 270px;
+    color: red;
+    text-align: end;
+    font-size: 20px;
+    z-index: 1;
 
 
 }
