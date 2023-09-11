@@ -1,12 +1,15 @@
 let display = document.querySelector(".display_input");
 let buttons = Array.from(document.querySelectorAll(".button"));
-let calculator = document.querySelector(".calculator");
 
-console.log(buttons);
+
+
 let has_operation = false;
-let number_a = "123";
-let number_b = "123";
-let operations = "+";
+let dot_total = 0;
+let number_a = "";
+let number_b = "";
+let operations = "";
+
+
 
 for (let i=0; i < buttons.length; i++) {
     // let button = buttons[i];
@@ -39,6 +42,7 @@ for (let i=0; i < buttons.length; i++) {
         number_a = '';
         number_b = '';
         operations = '';
+        dot_total = 0;
         return
     }
     if (eq) {
@@ -46,7 +50,14 @@ for (let i=0; i < buttons.length; i++) {
             number_b = display.value.split(operations)[1];
             display.value = calculate(number_a, number_b, operations);
         }
+        if (number_a.indexOf(".") > -1) {
+            has_operation = false;
+            dot_total = 1;
+            return
+        }
+
         has_operation = false;
+        dot_total = 0;
         return
     }
     if (number) {
@@ -59,7 +70,16 @@ for (let i=0; i < buttons.length; i++) {
         return
     }
     if (dot) {
-        display.value += dot;
+        if (has_operation == false && dot_total == 0) {
+            display.value += dot;
+            dot_total += 1;
+            return
+        }
+        if (has_operation == true && dot_total == 1) {
+            display.value += dot;
+            dot_total += 1;
+            return
+        }
         return
     }
     if (operation) {
@@ -76,16 +96,85 @@ for (let i=0; i < buttons.length; i++) {
     });
 }
 
+document.addEventListener("keydown", (e) => {
+ 
+    function calculate (a, b, oper) {
+        if (oper == "+") {
+            return Number(a) + Number(b)
+        }
+        if (oper == "-") {
+            return Number(a) - Number(b)
+        }
+        if (oper == "*") {
+            return Number(a) * Number(b)
+        }
+        if (oper == "/") {
+            return Number(a) / Number(b)
+        }
+    }
 
-// console.log(display);
-
-
-  // else if (display.value.includes("+") || display.value.includes("-") 
-    //         || display.value.includes("/") || display.value.includes("*")) {
-                
-    // }
+    if (e.key === "0" || e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4"
+     || e.key === "5" || e.key === "6" || e.key === "7" || e.key === "8" || e.key === "9") {
+        if (display.value == "0") {
+            display.value = e.key;
+            return
+        }
+        display.value += e.key;
+    }
     
-    // if (display.value == "0" && e.target.innerText != "." || display.value == "ERROR") {
-    //     display.value = e.target.innerText;
-    //     return
-    // } 
+    if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/" ) {
+        if (has_operation) {
+            return
+        }
+        number_a = display.value;
+        has_operation = true;
+        operations = e.key;
+        display.value += operations;
+        return
+    }
+    
+    if (e.key === ".") {
+        if (has_operation == false && dot_total == 0) {
+            display.value += e.key;
+            dot_total += 1;
+            return
+        }
+        if (has_operation == true && dot_total == 1) {
+            display.value += e.key;
+            dot_total += 1;
+            return
+        }
+        return
+    }
+
+    if (e.key === "=") {
+        if (has_operation) {
+            number_b = display.value.split(operations)[1];
+            display.value = calculate(number_a, number_b, operations);
+        }
+        if (number_a.indexOf(".") > -1) {
+            has_operation = false;
+            dot_total = 1;
+            return
+        }
+
+        has_operation = false;
+        dot_total = 0;
+        return
+    }
+
+    if (e.key === "c" || e.key === "Backspace") {
+        display.value = "0";
+        has_operation = false;
+        number_a = '';
+        number_b = '';
+        operations = '';
+        dot_total = 0;
+        return
+    }
+  });
+
+
+
+
+
